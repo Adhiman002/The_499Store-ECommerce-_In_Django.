@@ -1,0 +1,64 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Contact Us {% endblock %}
+{% block css %} 
+section{
+    background-image:url('../static/shop/images/ContactUs.jpg');
+    background-size:cover;
+    margin-top:-20px;
+    margin-bottom:-45px;
+}
+{% endblock %}
+{% block body %}
+<section class="p-2"> 
+<h2 class="mx-5 my-3 mt-4">Contact Form</h2>
+<form action="contact" id="contact_form" name="contact_form" method="post" class='mx-5'>{% csrf_token %}
+    <div class="mb-3 row mx-1">
+        <div class="col-mg-4">
+            <label>First Name</label>
+            <input type="text" required maxlength="50" class="form-control" id="first_name" name="First_name">
+        </div>
+        <div class="col-mg-3 mx-2">
+            <label>Last Name</label>
+            <input type="text" required maxlength="50" class="form-control" id="last_name" name="Last_name">
+        </div>
+    </div>
+    <div class="mb-3 row mx-1">
+        <div class="col-mg-3">
+            <label for="email_addr">Email address</label>
+            <input type="email" required maxlength="50" class="form-control" id="email_addr" name="Email"
+                placeholder="name@example.com">
+        </div>
+        <div class="col-mg-3 mx-2">
+            <label for="phone_input">Phone</label>
+            <input type="tel" required maxlength="50" class="form-control" id="phone_input" name="Phone"
+                placeholder="Phone">
+        </div>
+    </div>
+    <div class="mb-3 mx-1">
+        <label for="message">Message</label><br>
+        <textarea class="col-4"  id="message" name="Msg" rows="4"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary px-4 btn-lg mb-3">Post</button>
+</form>
+</section>
+
+{% block js %}
+<script>
+
+    if(localStorage.getItem('cart')==null){
+        var cart={};
+    }
+    else{
+        cart=JSON.parse(localStorage.getItem('cart')); 
+        
+    }
+    var sum=0;
+    for(var item in cart){
+        let qty=cart[item][0];
+        sum=sum+qty;
+        document.getElementById('cart').innerHTML= sum;
+        
+    }
+</script>
+{% endblock %}
+{% endblock %}

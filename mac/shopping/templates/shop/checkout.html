@@ -1,0 +1,272 @@
+{% extends 'shop/basic.html' %}
+{% block title %} Checkout {% endblock %}
+{% block css %} 
+/*?=======================CART SECTION===================== */
+
+#cart-container {
+    overflow-x: auto;
+}
+
+#cart-container table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    white-space: nowrap;
+    text-align:center;
+}
+
+#cart-container table thead {
+    font-weight: 700;
+}
+
+#cart-container table thead td {
+    background-color: #fb774b;
+    color: #fff;
+    border: none;
+    padding: 6px 0;
+}
+
+#cart-container table td {
+    border: 1px solid #b6b3b3;
+    
+}
+
+#cart-container table :nth-child(1) {
+    width: 50px;
+    
+}
+
+#cart-container table :nth-child(2){
+    width: 250px;
+    margin-left:-25px;
+    
+
+}
+
+#cart-container table :nth-child(4),
+#cart-container table :nth-child(5),
+#cart-container table :nth-child(3){
+    width: 100px;
+    
+}
+
+#cart-container table tbody img {
+    width: 50px;
+    height: 60px;
+    object-fit: cover;
+}
+
+#cart-container table tbody h5 {
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-left:-200px;
+}
+#cart-container table tbody h6{
+    display: inline-block;
+    font-size: 0.8rem;
+    
+}
+button.del{
+    background:transparent;
+    border:none;
+    cursor:pointer;
+}
+#cart-container table tbody i {
+    color: #8d8c89;
+    font-size: 1.1rem;
+}
+
+#cart-container table tbody i:hover {
+    color: rgb(51, 50, 50);
+}
+#cart-bottom .coupon {
+border:1px solid gray;
+height: fit-content;
+}
+
+#cart-bottom .coupon h5 ,.total h5{
+    background-color: #fb774b;
+    color: #fff;
+    border: none;
+    padding: 6px 6px;
+    font-weight: 700;
+}
+
+#cart-bottom .coupon p ,.total p{
+    padding: 0 12px;
+    font-weight: 600;
+}
+
+#cart-bottom .coupon input {
+    border-radius: 5px;
+    height: 35px;
+    margin: 0 0 20px 12px;
+}
+
+.pr-5, .px-5 {
+    padding-right: 4.7rem!important;
+}
+
+.no-padding{
+    padding-left:0; 
+    padding-right:0; 
+}
+ {% endblock %}
+{% block body %} 
+
+<section class="my-0">
+    <div class="container text-left mt-1 pt-2">
+        <h3>Shopping Cart</h3>
+        <hr class="mx-0">
+    </div>
+</section>
+<section id="cart-container" class="container my-1 ">
+    <table width="100%" class="border">
+        <thead>
+            <tr>
+                <td>Remove</td>
+                <td>Product</td>
+                <td>Price</td>
+                <td>Quantity</td>
+                <td>Total</td>
+            </tr>
+        </thead>
+        <span id="divpr{{i.id}}" class='divpr'>
+            <tbody id='items'>
+            </tbody>        
+        </span>
+    </table>
+    <div class="total col-lg-3 col-md-6 col-12 no-padding  float-right">
+        
+        <div class="d-flex justify-content-between px-5 " id="totals">
+            
+            
+        </div>
+    </div>
+</section>
+
+<section class="container my-5 no-padding" id="cart-bottom">
+    <div class="row justify-content-between ">
+        <div class="coupon col-lg-12 col-md-6 col-12 mb-4 no-padding mx-1">
+            <h5 class='px-5'>Enter Address and Other Details :-</h5>
+
+            <form class="my-2 mx-1" method='post' action="Order">{% csrf_token %}
+    
+                <div class="form-row my-0 mx-5">
+                    <input type="hidden" name='items_json' id="itemsJson">
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstname4">Name</label>
+                      <input type="text" class="form-control" id="inputFirstname4" placeholder="Name" name='Name'>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputLastname4">Phone No.</label>
+                      <input type="text" class="form-control" id="inputLastname4" placeholder="Phone" name='Phone'>
+                    </div>
+                   
+                    <div class="form-group col-md-12">
+                      <label for="inputEmail4">Email</label>
+                      <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name='Email'>
+                    </div>
+                </div>
+                <div class="form-row my-1 mx-5">
+                    <div class="form-group col-md-12">
+                        <label for="inputAddress">Address</label>
+                        <input type="text" class="form-control" id="inputAddress" name="Address" placeholder="1234 Main St">
+                    </div>
+                  
+                </div>
+                <div class="form-row my-4 mx-5">
+                    <div class="form-group col-md-4">
+                        <label for="inputCity">City</label>
+                        <input type="text" class="form-control" id="inputCity" placeholder="Enter City" name="City">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputState">State</label>
+                        <input type="text" class="form-control" id="inputState" placeholder="Enter State" name="State">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputZip">Zip</label>
+                        <input type="text" class="form-control" id="inputZip" placeholder="Zipcode" name="ZipCode">
+                    </div>
+                </div>
+               
+                <button type="submit" class="btn btn-primary mx-5 mb-5" onclick="localStorage.clear()">Order Place</button>
+              
+            </form>
+        </div>
+    </div>
+</section>
+{% block js %}
+<script>
+
+if(localStorage.getItem('cart')==null){
+    var cart={};
+}
+else{
+    cart=JSON.parse(localStorage.getItem('cart')); 
+     
+}
+
+if($.isEmptyObject(cart)){
+    mystr=`<div class="alert alert-primary" role="alert">
+                Your Cart is Empty ,Please Add some items  to your cart before checking out!
+            </div>`;
+    $('#cart-container').append(mystr);
+    $('.alert').alert();
+}
+else{
+    var totalprice=0;
+    var sum=0;
+    for(var item in cart){
+        let name=cart[item][1];
+        let qty=cart[item][0];
+        let price=cart[item][2];
+        sum=sum+qty;
+        itemprice=price*qty;
+        totalprice=totalprice+itemprice
+        mystr=`<tr id="divpr{{i.id}}" class='divpr'>
+                <td>
+                    <button class='del ' id="pr{{i.id}}" ><i class="fa fa-trash"></i></button>
+                </td>
+                <td>
+                        <h5>${name}</h5>
+                </td>
+                <td>
+                    <h6>${price} &#x20b9;</h6>
+                </td>
+                <td>${qty}</td>
+                <td>
+                    <h6>${itemprice} &#x20b9;</h6>
+                </td>
+            </tr>`;
+        Total=`<span><h6>Total :-</h6></span><span><h6>${totalprice} &#x20b9;</h6><hr></span>`
+
+        $('#items').append(mystr);
+        document.getElementById('cart').innerHTML= sum;
+    }
+    $('#totals').append(Total);
+}
+$('#itemsJson').val(JSON.stringify(cart));
+
+{% if thank %}
+alert("Thanks for Ordering withu us.")
+document.location='/'
+{% endif %}
+
+$('#items').on('click', 'button.del', function() {
+    var idstr=this.id.slice(4,);
+    a=cart[]
+    cart=JSON.parse(localStorage.getItem('cart'));
+    for(var item in cart){
+
+        a=cart['pr'+item] // Get the ID of the parent <tr> element
+        console.log(a)
+    }
+    //delete cart[idstr]; // Delete the item from the cart object using the ID as the key
+    //$(this).closest('tr').remove(); // Remove the corresponding table row from the DOM
+});
+
+
+</script>
+{% endblock %}
+{% endblock %}
